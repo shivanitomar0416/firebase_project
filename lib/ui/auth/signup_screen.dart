@@ -1,19 +1,22 @@
-import 'package:firebase_project/ui/auth/signup_screen.dart';
-import 'package:firebase_project/widgets/round_button.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_project/ui/auth/login_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_project/widgets/round_button.dart';
 
-class loginScreen extends StatefulWidget {
-  const loginScreen({super.key});
+class SignUpScreen extends StatefulWidget {
+  const SignUpScreen({super.key});
 
   @override
-  State<loginScreen> createState() => _loginScreenState();
+  State<SignUpScreen> createState() => _SignUpScreenState();
 }
 
-class _loginScreenState extends State<loginScreen> {
+class _SignUpScreenState extends State<SignUpScreen> {
   final _formKey = GlobalKey<FormState>();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  bool isLoading = false;
 
+  FirebaseAuth _auth = FirebaseAuth.instance;
   @override
   void dispose() {
     // TODO: implement dispose
@@ -28,7 +31,7 @@ class _loginScreenState extends State<loginScreen> {
       appBar: AppBar(
         // Center the title text in the AppBar
         title: Center(
-          child: const Text('Login'),
+          child: const Text('Signup'),
         ),
         // Remove the default leading icon if you want pure centering
         automaticallyImplyLeading: false,
@@ -79,27 +82,28 @@ class _loginScreenState extends State<loginScreen> {
               height: 50,
             ),
             RoundButton(
-              title: 'login',
+              title: 'signup',
               onTap: () {
-                if (_formKey.currentState!.validate()) {}
+                if (_formKey.currentState!.validate()) {
+                  _auth.createUserWithEmailAndPassword(
+                      email: emailController.text.toString(),
+                      password: passwordController.text.toString());
+                }
               },
             ),
             const SizedBox(
               height: 30,
             ),
             Row(
-               mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                
-                Text("Dont have an account?"),
+                Text("Already have an account?"),
                 TextButton(
                   onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => SignUpScreen()));
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => loginScreen()));
                   },
-                  child: Text('sign up'),
+                  child: Text('login'),
                 )
               ],
             )
