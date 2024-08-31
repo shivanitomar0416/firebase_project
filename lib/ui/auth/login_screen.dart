@@ -1,4 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_project/ui/auth/signup_screen.dart';
+import 'package:firebase_project/ui/posts/post_screen.dart';
+import 'package:firebase_project/utils/utils.dart';
 import 'package:firebase_project/widgets/round_button.dart';
 import 'package:flutter/material.dart';
 
@@ -10,16 +13,42 @@ class loginScreen extends StatefulWidget {
 }
 
 class _loginScreenState extends State<loginScreen> {
+  bool loading = false;
   final _formKey = GlobalKey<FormState>();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
+  final _auth = FirebaseAuth.instance;
   @override
   void dispose() {
     // TODO: implement dispose
     super.dispose();
     emailController.dispose();
     passwordController.dispose();
+  }
+
+  void login() {
+    setState(() {
+      loading = true;
+    });
+    _auth
+        .signInWithEmailAndPassword(
+            email: emailController.text,
+            password: passwordController.text.toString())
+        .then((value) {
+      Utils().toastMessage(value.user!.email.toString());
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => PostScreen()));
+          setState(() {
+      loading = false;
+    });
+    }).onError((error, stackTrace) {
+      debugPrint(error.toString());
+      Utils().toastMessage(error.toString());
+         setState(() {
+      loading = false;
+    });
+    });
   }
 
   @override
@@ -80,17 +109,19 @@ class _loginScreenState extends State<loginScreen> {
             ),
             RoundButton(
               title: 'login',
+                loading: loading,
               onTap: () {
-                if (_formKey.currentState!.validate()) {}
+                if (_formKey.currentState!.validate()) {
+                  login();
+                }
               },
             ),
             const SizedBox(
               height: 30,
             ),
             Row(
-               mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                
                 Text("Dont have an account?"),
                 TextButton(
                   onPressed: () {
