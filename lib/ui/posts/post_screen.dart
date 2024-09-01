@@ -14,7 +14,7 @@ class _PostScreenState extends State<PostScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('post'),
+        title: const Text('post'),
         actions: [
           IconButton(
             onPressed: () async {
@@ -26,9 +26,9 @@ class _PostScreenState extends State<PostScreen> {
                 Utils().toastMessage(error.toString());
               });
             },
-            icon: Icon(Icons.logout_outlined),
+            icon: const Icon(Icons.logout_outlined),
           ),
-          SizedBox(
+          const SizedBox(
             width: 10,
           )
         ],

@@ -17,7 +17,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
-  FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   @override
   void dispose() {
     // TODO: implement dispose
@@ -54,8 +54,8 @@ void signup(){
     return Scaffold(
       appBar: AppBar(
         // Center the title text in the AppBar
-        title: Center(
-          child: const Text('Signup'),
+        title: const Center(
+          child: Text('Signup'),
         ),
         // Remove the default leading icon if you want pure centering
         automaticallyImplyLeading: false,
@@ -120,13 +120,13 @@ void signup(){
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text("Already have an account?"),
+                const Text("Already have an account?"),
                 TextButton(
                   onPressed: () {
                     Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => loginScreen()));
+                        MaterialPageRoute(builder: (context) => const loginScreen()));
                   },
-                  child: Text('login'),
+                  child: const Text('login'),
                 )
               ],
             )

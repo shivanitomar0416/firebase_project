@@ -38,7 +38,7 @@ class _loginScreenState extends State<loginScreen> {
         .then((value) {
       Utils().toastMessage(value.user!.email.toString());
       Navigator.push(
-          context, MaterialPageRoute(builder: (context) => PostScreen()));
+          context, MaterialPageRoute(builder: (context) => const PostScreen()));
           setState(() {
       loading = false;
     });
@@ -56,8 +56,8 @@ class _loginScreenState extends State<loginScreen> {
     return Scaffold(
       appBar: AppBar(
         // Center the title text in the AppBar
-        title: Center(
-          child: const Text('Login'),
+        title: const Center(
+          child: Text('Login'),
         ),
         // Remove the default leading icon if you want pure centering
         automaticallyImplyLeading: false,
@@ -122,15 +122,15 @@ class _loginScreenState extends State<loginScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text("Dont have an account?"),
+                const Text("Dont have an account?"),
                 TextButton(
                   onPressed: () {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => SignUpScreen()));
+                            builder: (context) => const SignUpScreen()));
                   },
-                  child: Text('sign up'),
+                  child: const Text('sign up'),
                 )
               ],
             )
