@@ -1,7 +1,7 @@
+import 'package:firebase_project/ui/auth/signup_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_project/utils/utils.dart';
-import 'package:firebase_project/ui/auth/login_screen.dart'; // Ensure this path is correct
 
 class PostScreen extends StatefulWidget {
   const PostScreen({super.key});
@@ -18,7 +18,7 @@ class _PostScreenState extends State<PostScreen> {
       await auth.signOut();
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const LoginScreen()),
+        MaterialPageRoute(builder: (context) => const SignUpScreen()),
       );
     } catch (error) {
       Utils().toastMessage(error.toString());
@@ -38,6 +38,7 @@ class _PostScreenState extends State<PostScreen> {
           const SizedBox(width: 10),
         ],
       ),
+       body: Center(child: Text('Post Screen')), 
     );
   }
 }
