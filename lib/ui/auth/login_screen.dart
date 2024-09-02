@@ -4,7 +4,6 @@ import 'package:firebase_project/ui/posts/post_screen.dart';
 import 'package:firebase_project/utils/utils.dart';
 import 'package:firebase_project/widgets/round_button.dart';
 import 'package:flutter/material.dart';
-
 class loginScreen extends StatefulWidget {
   const loginScreen({super.key});
 
