@@ -38,7 +38,7 @@ class _PostScreenState extends State<PostScreen> {
           const SizedBox(width: 10),
         ],
       ),
-       body: Center(child: Text('Post Screen')), 
+       body: const Center(child: Text('Post Screen')), 
     );
   }
 }
