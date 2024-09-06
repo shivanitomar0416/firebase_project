@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_project/ui/auth/login_screen.dart';
-import 'package:firebase_project/ui/posts/post_screen.dart';
 import '../firebase_services/splash_services.dart';
 //import 'package:firebase_core/firebase_core.dart';
 

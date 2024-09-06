@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
           backgroundColor: Color.fromARGB(255, 222, 147, 201), // Set the app bar color
         ),
       ),
-      home: SplashScreen(),
+      home: const SplashScreen(),
     );
   }
 }
