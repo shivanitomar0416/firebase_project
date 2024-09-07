@@ -1,9 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_project/ui/auth/login_with_phone_number.dart';
 import 'package:firebase_project/ui/auth/signup_screen.dart';
 import 'package:firebase_project/ui/posts/post_screen.dart';
 import 'package:firebase_project/utils/utils.dart';
 import 'package:firebase_project/widgets/round_button.dart';
 import 'package:flutter/material.dart';
+
 class loginScreen extends StatefulWidget {
   const loginScreen({super.key});
 
@@ -38,19 +40,17 @@ class _loginScreenState extends State<loginScreen> {
       Utils().toastMessage(value.user!.email.toString());
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => const PostScreen()));
-          setState(() {
-      loading = false;
-    });
+      setState(() {
+        loading = false;
+      });
     }).onError((error, stackTrace) {
       debugPrint(error.toString());
       Utils().toastMessage(error.toString());
-         setState(() {
-      loading = false;
-    });
+      setState(() {
+        loading = false;
+      });
     });
   }
-
-  
 
   @override
   Widget build(BuildContext context) {
@@ -110,7 +110,7 @@ class _loginScreenState extends State<loginScreen> {
             ),
             RoundButton(
               title: 'login',
-                loading: loading,
+              loading: loading,
               onTap: () {
                 if (_formKey.currentState!.validate()) {
                   login();
@@ -135,22 +135,24 @@ class _loginScreenState extends State<loginScreen> {
                 )
               ],
             ),
-            const SizedBox(height: 30,),
+            const SizedBox(
+              height: 30,
+            ),
             InkWell(
-              onTap: (){
-
-              },
-              child: Container(
-                height: 50,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(50),
-                  border: Border.all(color: Colors.black)
-                ),
-                child: Center(
-                  child: Text('Login with phone'),
-                )
-              )
-            )
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => LoginWithPhoneNumber())
+                  );
+                },
+                child: Container(
+                    height: 50,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(50),
+                        border: Border.all(color: Colors.black)),
+                    child: const Center(
+                      child: Text('Login with phone'),
+                    )))
           ],
         ),
       ),

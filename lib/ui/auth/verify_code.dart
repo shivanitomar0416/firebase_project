@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 class VerifyCodeScreen extends StatefulWidget {
-  const VerifyCodeScreen({super.key});
+  final String verificationId;
+  const VerifyCodeScreen({Key? key, required this.verificationId}) : super(key: key);
+
 
   @override
   State<VerifyCodeScreen> createState() => _VerifyCodeScreenState();
@@ -12,12 +14,10 @@ class _VerifyCodeScreenState extends State<VerifyCodeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Verify'),
+        title: const Text('Verify'),
       ),
-      body: Column(
-        children: [
-          
-        ],
+      body: const Column(
+        children: [],
       ),
     );
   }
