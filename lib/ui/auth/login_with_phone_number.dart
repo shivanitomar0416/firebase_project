@@ -26,32 +26,54 @@ class _LoginWithPhoneNumberState extends State<LoginWithPhoneNumber> {
         child: Column(
           // Removed the 'const' keyword
           children: [
-            SizedBox(
+            const SizedBox(
               height: 50,
             ),
             TextFormField(
               controller: phoneNumberController,
-              decoration: InputDecoration(hintText: "+1245236588"),
+              keyboardType: TextInputType.phone,
+              decoration:  InputDecoration(hintText: "+1245236588"),
             ),
-            SizedBox(
+             SizedBox(
               height: 80,
             ),
             RoundButton(
                 title: 'Login',
+                loading: loading,
                 onTap: () {
+                  setState(() {
+                    loading = true;
+                  });
+
                   auth.verifyPhoneNumber(
                       phoneNumber: phoneNumberController.text,
-                      verificationCompleted: (_) {},
+                      verificationCompleted: (_) {
+                        setState(() {
+                          loading = false;
+                        });
+                      },
                       verificationFailed: (e) {
+                          setState(() {
+                          loading = false;
+                        });
                         Utils().toastMessage(e.toString());
                       },
                       codeSent: (String verificationId, int? token) {
                         Navigator.push(
-                            context, MaterialPageRoute(
-                              builder: (context)=> VerifyCodeScreen(verificationId: verificationId,)));
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => VerifyCodeScreen(
+                                      verificationId: verificationId,
+                                    )));
+                                      setState(() {
+                          loading = false;
+                        });
                       },
                       codeAutoRetrievalTimeout: (e) {
                         Utils().toastMessage(e.toString());
+                          setState(() {
+                          loading = false;
+                        });
                       });
                 })
           ],

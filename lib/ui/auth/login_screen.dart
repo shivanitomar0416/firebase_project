@@ -142,7 +142,7 @@ class _loginScreenState extends State<loginScreen> {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => LoginWithPhoneNumber())
+                    MaterialPageRoute(builder: (context) => const LoginWithPhoneNumber())
                   );
                 },
                 child: Container(
