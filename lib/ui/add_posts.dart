@@ -9,8 +9,12 @@ class AddPostScreen extends StatefulWidget {
 class _AddPostScreenState extends State<AddPostScreen> {
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      
+    return Scaffold(
+      appBar: AppBar(
+             title: Text("add post"), 
+      ),body: Column(children: [
+          
+      ],)
     );
   }
 }
