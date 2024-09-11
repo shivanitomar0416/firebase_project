@@ -33,9 +33,9 @@ class _VerifyCodeScreenState extends State<VerifyCodeScreen> {
             TextFormField(
               controller: verificationCodeController,
               keyboardType: TextInputType.phone,
-              decoration: InputDecoration(hintText: '6 Digit Code'),
+              decoration: const InputDecoration(hintText: '6 Digit Code'),
             ),
-            SizedBox(
+            const SizedBox(
               height: 80,
             ),
             RoundButton(
@@ -54,7 +54,7 @@ class _VerifyCodeScreenState extends State<VerifyCodeScreen> {
                     await auth.signInWithCredential(crendital);
 
                     Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => PostScreen()));
+                        MaterialPageRoute(builder: (context) => const PostScreen()));
                   } catch (e) {
                     setState(() {
                       loading = false;

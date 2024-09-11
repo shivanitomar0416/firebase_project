@@ -25,7 +25,7 @@ class _PostScreenState extends State<PostScreen> {
               onPressed: () {
                 auth.signOut().then((value) {
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => loginScreen()));
+                      MaterialPageRoute(builder: (context) =>  loginScreen()));
                 }).onError((error, stackTrace) {
                   Utils().toastMessage(error.toString());
                 });
@@ -38,7 +38,7 @@ class _PostScreenState extends State<PostScreen> {
           Navigator.push(context,
               MaterialPageRoute(builder: (context) => AddPostScreen()));
         },
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
         ),
         );
   }
