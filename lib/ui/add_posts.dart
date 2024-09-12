@@ -31,7 +31,10 @@ class _AddPostScreenState extends State<AddPostScreen> {
               TextFormField(
                 maxLines: 4,
                 decoration:
-                    const InputDecoration(hintText: 'What is in your mind?'),
+               const InputDecoration(
+                hintText: 'What is in your mind?',
+                border: OutlineInputBorder()
+                ),
               ),
               const SizedBox(
                 height: 30,

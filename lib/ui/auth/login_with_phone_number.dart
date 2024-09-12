@@ -44,9 +44,9 @@ class _LoginWithPhoneNumberState extends State<LoginWithPhoneNumber> {
                   setState(() {
                     loading = true;
                   });
-
-                  auth.verifyPhoneNumber(
-                      phoneNumber: phoneNumberController.text,
+                  String phoneNumber = "+91${phoneNumberController.text.trim()}";// Add country code (+1 for US)
+                         auth.verifyPhoneNumber(
+                           phoneNumber: phoneNumber,
                       verificationCompleted: (_) {
                         setState(() {
                           loading = false;
