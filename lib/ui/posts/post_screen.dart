@@ -17,11 +17,19 @@ class PostScreen extends StatefulWidget {
 class _PostScreenState extends State<PostScreen> {
   final auth = FirebaseAuth.instance;
   final ref = FirebaseDatabase.instance.ref('post');
+  final searchFilter = TextEditingController();
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
+        centerTitle: true,
         title: const Text('Post'),
         actions: [
           IconButton(
@@ -35,22 +43,65 @@ class _PostScreenState extends State<PostScreen> {
             },
             icon: const Icon(Icons.logout), // Updated icon
           ),
+          SizedBox(
+            width: 10,
+          )
         ],
       ),
       body: Column(
         children: [
+          SizedBox(
+            height: 10,
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: TextFormField(
+              controller: searchFilter,
+              decoration: InputDecoration(
+                  hintText: 'Search', border: OutlineInputBorder()),
+              onChanged: (String value) {
+                setState(() {
+                  
+                });
+              },
+            ),
+          ),
+          /*
+          Expanded(
+              child: StreamBuilder(
+            stream: ref.onValue,
+            builder: (context, AsyncSnapshot<DatabaseEvent> snapshot) {
+              if (!snapshot.hasData) {
+                return CircularProgressIndicator();
+              } else {
+                Map<dynamic, dynamic> map =
+                    snapshot.data!.snapshot.value as dynamic;
+                List<dynamic> list = [];
+                list.clear();
+                list = map.values.toList();
+
+                return ListView.builder(
+                    itemCount: snapshot.data!.snapshot.children.length,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        title: Text(list[index]['title']),
+                        subtitle: Text(list[index]['id']),
+                      );
+                    });
+              }
+            },
+          )),
+          */
           Expanded(
             child: FirebaseAnimatedList(
-            query: ref, 
-            defaultChild: Text('Loading'),
-            itemBuilder: (context, snapshot, animation, index){
-         return  ListTile(
-            title: Text(snapshot.child('title').value.toString()),
-            subtitle: Text(snapshot.child('id').value.toString()),
-           
-         );
-             }
-          ),
+                query: ref,
+                defaultChild: Text('Loading'),
+                itemBuilder: (context, snapshot, animation, index) {
+                  return ListTile(
+                    title: Text(snapshot.child('title').value.toString()),
+                    subtitle: Text(snapshot.child('id').value.toString()),
+                  );
+                }),
           ),
         ],
       ),

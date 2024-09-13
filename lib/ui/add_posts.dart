@@ -18,50 +18,53 @@ class _AddPostScreenState extends State<AddPostScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text("add post"),
+      appBar: AppBar(
+        title: Text("Add Post"),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: Column(
+          children: [
+            SizedBox(
+              height: 30,
+            ),
+            TextFormField(
+              maxLines: 4,
+              controller: postController,
+              decoration: InputDecoration(
+                hintText: 'What is on your mind?',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            SizedBox(
+              height: 30,
+            ),
+            RoundButton(
+              title: loading ? 'Adding...' : 'Add',
+              onTap: () {
+                if (loading) return; // Prevents multiple taps
+                setState(() {
+                  loading = true;
+                });
+                databaseRef.child(DateTime.now().millisecondsSinceEpoch.toString()).set({
+                  'title': postController.text,
+                  'timestamp': DateTime.now().toString() // Updated field name and value
+                }).then((value) {
+                  Utils().toastMessage('Post added');
+                  setState(() {
+                    loading = false;
+                  });
+                }).onError((error, stackTrace) {
+                  Utils().toastMessage(error.toString());
+                  setState(() {
+                    loading = false;
+                  });
+                });
+              }
+            ),
+          ],
         ),
-        body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Column(
-            children: [
-              const SizedBox(
-                height: 30,
-              ),
-              TextFormField(
-                maxLines: 4,
-                decoration:
-               const InputDecoration(
-                hintText: 'What is in your mind?',
-                border: OutlineInputBorder()
-                ),
-              ),
-              const SizedBox(
-                height: 30,
-              ),
-              RoundButton(
-                  title: 'Add',
-                  onTap: () {
-                    setState(() {
-                      loading = true;
-                    });
-                    databaseRef.child(DateTime.now().millisecondsSinceEpoch.toString()).set({
-                      'title': postController.text.toString(),
-                      'id': DateTime
-                    }).then((value) {
-                      Utils().toastMessage('Post added');
-                      setState(() {
-                      loading = true;
-                    });
-                    }).onError((error, stackTrace) {
-                      Utils().toastMessage(error.toString());
-                      setState(() {
-                      loading = false;
-                    });
-                    });
-                  })
-            ],
-          ),
-        ));
+      ),
+    );
   }
 }
