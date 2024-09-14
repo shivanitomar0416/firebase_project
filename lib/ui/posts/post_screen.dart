@@ -8,7 +8,7 @@ import 'package:firebase_project/ui/auth/login_screen.dart';
 import 'package:firebase_project/ui/add_posts.dart';
 
 class PostScreen extends StatefulWidget {
-  const PostScreen({super.key});
+  const PostScreen({Key? key}) : super(key: key);
 
   @override
   State<PostScreen> createState() => _PostScreenState();
@@ -16,11 +16,11 @@ class PostScreen extends StatefulWidget {
 
 class _PostScreenState extends State<PostScreen> {
   final auth = FirebaseAuth.instance;
-  final ref = FirebaseDatabase.instance.ref('post');
-  final searchFilter = TextEditingController();
+  final ref = FirebaseDatabase.instance.ref('Post');
+  final editController = TextEditingController();
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
   }
 
@@ -28,9 +28,7 @@ class _PostScreenState extends State<PostScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
-        centerTitle: true,
-        title: const Text('Post'),
+        title: Text('Post'),
         actions: [
           IconButton(
             onPressed: () {
@@ -41,57 +39,13 @@ class _PostScreenState extends State<PostScreen> {
                 Utils().toastMessage(error.toString());
               });
             },
-            icon: const Icon(Icons.logout), // Updated icon
+            icon: Icon(Icons.logout_outlined),
           ),
-          SizedBox(
-            width: 10,
-          )
+          SizedBox(width: 10),
         ],
       ),
       body: Column(
         children: [
-          SizedBox(
-            height: 10,
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: TextFormField(
-              controller: searchFilter,
-              decoration: InputDecoration(
-                  hintText: 'Search', border: OutlineInputBorder()),
-              onChanged: (String value) {
-                setState(() {
-                  
-                });
-              },
-            ),
-          ),
-          /*
-          Expanded(
-              child: StreamBuilder(
-            stream: ref.onValue,
-            builder: (context, AsyncSnapshot<DatabaseEvent> snapshot) {
-              if (!snapshot.hasData) {
-                return CircularProgressIndicator();
-              } else {
-                Map<dynamic, dynamic> map =
-                    snapshot.data!.snapshot.value as dynamic;
-                List<dynamic> list = [];
-                list.clear();
-                list = map.values.toList();
-
-                return ListView.builder(
-                    itemCount: snapshot.data!.snapshot.children.length,
-                    itemBuilder: (context, index) {
-                      return ListTile(
-                        title: Text(list[index]['title']),
-                        subtitle: Text(list[index]['id']),
-                      );
-                    });
-              }
-            },
-          )),
-          */
           Expanded(
             child: FirebaseAnimatedList(
                 query: ref,
@@ -100,6 +54,38 @@ class _PostScreenState extends State<PostScreen> {
                   return ListTile(
                     title: Text(snapshot.child('title').value.toString()),
                     subtitle: Text(snapshot.child('id').value.toString()),
+                    trailing: PopupMenuButton(
+                      color: Colors.white,
+                      elevation: 4,
+                      padding: EdgeInsets.zero,
+                      shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(2))),
+                      icon: Icon(Icons.more_vert),
+                      itemBuilder: (context) => [
+                        PopupMenuItem(
+                          value: 1,
+                          child: ListTile(
+                            onTap: () {
+                              Navigator.pop(context);
+                              showMyDialog(snapshot.child('title').value.toString(), snapshot.child('id').value.toString());
+                            },
+                            leading: Icon(Icons.edit),
+                            title: Text('Edit'),
+                          ),
+                        ),
+                        PopupMenuItem(
+                          value: 2,
+                          child: ListTile(
+                            onTap: () {
+                              Navigator.pop(context);
+                              deletePost(snapshot.child('id').value.toString());
+                            },
+                            leading: Icon(Icons.delete_outline),
+                            title: Text('Delete'),
+                          ),
+                        ),
+                      ],
+                    ),
                   );
                 }),
           ),
@@ -107,11 +93,47 @@ class _PostScreenState extends State<PostScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => AddPostScreen()));
+          Navigator.push(context, MaterialPageRoute(builder: (context) => AddPostScreen()));
         },
-        child: const Icon(Icons.add),
+        child: Icon(Icons.add),
       ),
     );
+  }
+
+  void showMyDialog(String title, String postId) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Edit Post'),
+          content: TextFormField(
+            controller: editController,
+            decoration: InputDecoration(
+              hintText: 'Edit post',
+              border: OutlineInputBorder(),
+            ),
+          ),
+          actions: [
+            ElevatedButton(
+              onPressed: () {
+                ref.child(postId).update({'title': editController.text});
+                Navigator.pop(context);
+              },
+              child: Text('Save'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text('Cancel'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void deletePost(String postId) {
+    ref.child(postId).remove();
   }
 }
