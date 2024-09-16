@@ -89,7 +89,7 @@ class _FireStoreScreenState extends State<FireStoreScreen> {
                 }),
           ),
         ],
-      ),
+      ),  
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(context, MaterialPageRoute(builder: (context) => AddPostScreen()));
