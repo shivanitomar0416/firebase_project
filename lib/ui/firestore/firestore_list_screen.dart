@@ -111,13 +111,7 @@ class _FireStoreScreenState extends State<FireStoreScreen> {
               hintText: 'Edit post',
               border: OutlineInputBorder(),
             ),
-          ),
-          actions: [
-            ElevatedButton(
-              onPressed: () {
-                ref.child(postId).update({'title': editController.text});
-                Navigator.pop(context);
-              },
+
               child: Text('Save'),
             ),
             TextButton(
@@ -130,9 +124,6 @@ class _FireStoreScreenState extends State<FireStoreScreen> {
         );
       },
     );
-  }
 
-  void deletePost(String postId) {
-    ref.child(postId).remove();
   }
 }
