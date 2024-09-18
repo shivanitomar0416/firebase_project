@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_project/utils/utils.dart';
 import 'package:firebase_project/ui/auth/login_screen.dart';
 import 'package:firebase_project/ui/add_posts.dart';
+
 class FireStoreScreen extends StatefulWidget {
   const FireStoreScreen({super.key});
 
@@ -14,8 +15,7 @@ class FireStoreScreen extends StatefulWidget {
 }
 
 class _FireStoreScreenState extends State<FireStoreScreen> {
-  
-   final auth = FirebaseAuth.instance;
+  final auth = FirebaseAuth.instance;
   final editController = TextEditingController();
 
   @override
@@ -46,60 +46,25 @@ class _FireStoreScreenState extends State<FireStoreScreen> {
       body: Column(
         children: [
           Expanded(
-            child: FirebaseAnimatedList(
-                query: ref,
-                defaultChild: Text('Loading'),
-                itemBuilder: (context, snapshot, animation, index) {
-                  return ListTile(
-                    title: Text(snapshot.child('title').value.toString()),
-                    subtitle: Text(snapshot.child('id').value.toString()),
-                    trailing: PopupMenuButton(
-                      color: Colors.white,
-                      elevation: 4,
-                      padding: EdgeInsets.zero,
-                      shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(2))),
-                      icon: Icon(Icons.more_vert),
-                      itemBuilder: (context) => [
-                        PopupMenuItem(
-                          value: 1,
-                          child: ListTile(
-                            onTap: () {
-                              Navigator.pop(context);
-                              showMyDialog(snapshot.child('title').value.toString(), snapshot.child('id').value.toString());
-                            },
-                            leading: Icon(Icons.edit),
-                            title: Text('Edit'),
-                          ),
-                        ),
-                        PopupMenuItem(
-                          value: 2,
-                          child: ListTile(
-                            onTap: () {
-                              Navigator.pop(context);
-                              deletePost(snapshot.child('id').value.toString());
-                            },
-                            leading: Icon(Icons.delete_outline),
-                            title: Text('Delete'),
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                }),
-          ),
+              child: ListView.builder(
+                  itemCount: 10,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      title: Text('aasf'),
+                    );
+                  })),
         ],
-      ),  
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => AddPostScreen()));
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => AddPostScreen()));
         },
         child: Icon(Icons.add),
       ),
     );
   }
-
-  void showMyDialog(String title, String postId) {
+   void showMyDialog(String title, String postId) {
     showDialog(
       context: context,
       builder: (context) {
@@ -109,21 +74,25 @@ class _FireStoreScreenState extends State<FireStoreScreen> {
             controller: editController,
             decoration: InputDecoration(
               hintText: 'Edit post',
-              border: OutlineInputBorder(),
             ),
-
-              child: Text('Save'),
-            ),
+          ),
+          actions: [
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
               },
               child: Text('Cancel'),
             ),
+             TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text('update'),
+            ),
           ],
         );
       },
     );
-
   }
 }
+
