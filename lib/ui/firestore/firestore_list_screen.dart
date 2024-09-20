@@ -1,11 +1,12 @@
+import 'package:firebase_project/ui/firestore/add_firebase_data.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
-import 'package:firebase_project/ui/auth/signup_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_project/utils/utils.dart';
 import 'package:firebase_project/ui/auth/login_screen.dart';
-import 'package:firebase_project/ui/add_posts.dart';
+import 'package:firebase_project/ui/firestore/firestore_list_screen.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class FireStoreScreen extends StatefulWidget {
   const FireStoreScreen({super.key});
@@ -17,6 +18,8 @@ class FireStoreScreen extends StatefulWidget {
 class _FireStoreScreenState extends State<FireStoreScreen> {
   final auth = FirebaseAuth.instance;
   final editController = TextEditingController();
+  final fireStore = FirebaseFirestore.instance.collection('user').snapshots();
+  CollectionReference ref = FirebaseFirestore.instance.collection('users');
 
   @override
   void initState() {
@@ -27,7 +30,7 @@ class _FireStoreScreenState extends State<FireStoreScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Post'),
+        title: Text('Firestore'),
         actions: [
           IconButton(
             onPressed: () {
@@ -45,26 +48,54 @@ class _FireStoreScreenState extends State<FireStoreScreen> {
       ),
       body: Column(
         children: [
-          Expanded(
-              child: ListView.builder(
-                  itemCount: 10,
-                  itemBuilder: (context, index) {
-                    return ListTile(
-                      title: Text('aasf'),
-                    );
-                  })),
+          SizedBox(
+            height: 10,
+          ),
+          StreamBuilder<QuerySnapshot>(
+              stream: fireStore,
+              builder:
+                  (BuildContext contex, AsyncSnapshot<QuerySnapshot> snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting)
+                  return CircularProgressIndicator();
+
+                if (snapshot.hasError) return Text('Some error');
+                return Expanded(
+                    child: ListView.builder(
+                        itemCount: snapshot.data!.docs.length,
+                        itemBuilder: (context, index) {
+                          return ListTile(
+                            onTap: (){
+                              // ref.doc(snapshot.data!.docs[index]['id'].toSting()).update({
+                              //     'title' : 'its me shivani'
+                              // }).then((value){
+                              //    Utils().toastMessage('updated');
+                              // }).onError((error, stackTrace){
+                              //   Utils().toastMessage(error.toString());
+                              // });
+                              ref.doc(snapshot.data!.docs[index]['id'].toString()).delete;
+                            },
+                            title: Text(
+                                snapshot.data!.docs[index]['title'].toString()),
+                            subtitle: Text(
+                                snapshot.data!.docs[index]['id'].toString()),
+                          );
+                        }));
+              }),
         ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => AddPostScreen()));
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => AddFirestoreDataScreen()));
         },
         child: Icon(Icons.add),
       ),
     );
   }
-   void showMyDialog(String title, String postId) {
+
+  void showMyDialog(String title, String postId) {
     showDialog(
       context: context,
       builder: (context) {
@@ -83,7 +114,7 @@ class _FireStoreScreenState extends State<FireStoreScreen> {
               },
               child: Text('Cancel'),
             ),
-             TextButton(
+            TextButton(
               onPressed: () {
                 Navigator.pop(context);
               },
@@ -95,4 +126,3 @@ class _FireStoreScreenState extends State<FireStoreScreen> {
     );
   }
 }
-
