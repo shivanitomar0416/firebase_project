@@ -27,26 +27,46 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
 
 void signup(){
-   setState(() {
-                    loading = true;
-                  });
-                  _auth
-                      .createUserWithEmailAndPassword(
-                          email: emailController.text.toString(),
-                          password: passwordController.text.toString())
-                      .then((value) {
-                         setState(() {
-                    loading = false;
-                  });
-                      })
-                      .onError((error, stackTrace) {
-                    Utils().toastMessage(error.toString());
-                        setState(() {
-                    loading = false;
-                  });
-                  });
-                }
-
+  setState(() {
+    loading = true;
+  });
+  _auth
+      .createUserWithEmailAndPassword(
+          email: emailController.text.toString(),
+          password: passwordController.text.toString())
+      .then((value) {
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Text('Signup Successful'),
+              content: Text('You can now login with your new account.'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const loginScreen()),
+                    );
+                  },
+                  child: Text('OK'),
+                ),
+              ],
+            );
+          },
+        );
+        setState(() {
+          loading = false;
+        });
+      })
+      .onError((error, stackTrace) {
+        Utils().toastMessage(error.toString());
+        setState(() {
+          loading = false;
+        });
+      });
+}
 
   @override
   Widget build(BuildContext context) {

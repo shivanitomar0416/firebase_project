@@ -12,9 +12,15 @@ class AddPostScreen extends StatefulWidget {
 
 class _AddPostScreenState extends State<AddPostScreen> {
 
-  final postController =TextEditingController();
-  bool loading = false ;
+  final postController = TextEditingController();
+  bool loading = false;
   final databaseRef = FirebaseDatabase.instance.ref('Post');
+
+  @override
+  void dispose() {
+    postController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,6 +37,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
             ),
 
             TextFormField(
+              minLines: 1,
               maxLines: 4,
               controller: postController,
               decoration: InputDecoration(
@@ -45,27 +52,28 @@ class _AddPostScreenState extends State<AddPostScreen> {
                 title: 'Add',
                 loading: loading,
                 onTap: (){
+                  if (loading) return;
+
                   setState(() {
-                    loading = true ;
+                    loading = true;
                   });
 
-
-                  String id  = DateTime.now().millisecondsSinceEpoch.toString() ;
+                  String id = databaseRef.push().key ?? '';
                   databaseRef.child(id).set({
-                    'title' : postController.text.toString() ,
-                    'id' : DateTime.now().millisecondsSinceEpoch.toString()
+                    'title' : postController.text.toString(),
+                    'id' : id
                   }).then((value){
                     Utils().toastMessage('Post added');
                     setState(() {
-                      loading = false ;
+                      loading = false;
                     });
                   }).onError((error, stackTrace){
                     Utils().toastMessage(error.toString());
                     setState(() {
-                      loading = false ;
+                      loading = false;
                     });
                   });
-            })
+                })
           ],
         ),
       ),

@@ -132,8 +132,12 @@ class _PostScreenState extends State<PostScreen> {
       },
     );
   }
-
-  void deletePost(String postId) {
-    ref.child(postId).remove();
-  }
+void deletePost(String postId) {
+  ref.child(postId).remove().then((value) {
+    Utils().toastMessage('Post deleted successfully');
+  }).onError((error, stackTrace) {
+    Utils().toastMessage('Error deleting post: ${error.toString()}');
+    print('Error deleting post: ${error.toString()}');
+  });
+}
 }

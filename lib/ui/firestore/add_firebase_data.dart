@@ -15,7 +15,6 @@ class _AddFirestoreDataScreenState extends State<AddFirestoreDataScreen> {
   final postController = TextEditingController();
   bool loading = false;
   final fireStore = FirebaseFirestore.instance.collection('users');
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,8 +30,7 @@ class _AddFirestoreDataScreenState extends State<AddFirestoreDataScreen> {
             ),
             TextFormField(
               maxLines: 4,
-              controller:
-                  postController, //saving the data "what is in your mind"
+              controller: postController,
               decoration: InputDecoration(
                   hintText: 'What is in your mind?',
                   border: OutlineInputBorder()),
@@ -47,19 +45,18 @@ class _AddFirestoreDataScreenState extends State<AddFirestoreDataScreen> {
                   setState(() {
                     loading = true;
                   });
-                  String id = DateTime.now().millisecondsSinceEpoch.toString();
-                  fireStore.doc().set({
-                    'title': postController.text.toString(),
-                    'id': id
+                  fireStore.add({
+                    'title': postController.text,
+                    'id': fireStore.doc().id
                   }).then((value) {
                     setState(() {
-                    loading = false;
-                  });
+                      loading = false;
+                    });
                     Utils().toastMessage('post added');
                   }).onError((error, stackTrace) {
                     setState(() {
-                    loading = false;
-                  });
+                      loading = false;
+                    });
                     Utils().toastMessage(error.toString());
                   });
                 })

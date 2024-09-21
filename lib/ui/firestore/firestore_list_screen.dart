@@ -18,7 +18,7 @@ class FireStoreScreen extends StatefulWidget {
 class _FireStoreScreenState extends State<FireStoreScreen> {
   final auth = FirebaseAuth.instance;
   final editController = TextEditingController();
-  final fireStore = FirebaseFirestore.instance.collection('user').snapshots();
+  final fireStore = FirebaseFirestore.instance.collection('users').snapshots();
   CollectionReference ref = FirebaseFirestore.instance.collection('users');
 
   @override
@@ -53,8 +53,8 @@ class _FireStoreScreenState extends State<FireStoreScreen> {
           ),
           StreamBuilder<QuerySnapshot>(
               stream: fireStore,
-              builder:
-                  (BuildContext contex, AsyncSnapshot<QuerySnapshot> snapshot) {
+              builder: (BuildContext context,
+                  AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting)
                   return CircularProgressIndicator();
 
@@ -64,22 +64,30 @@ class _FireStoreScreenState extends State<FireStoreScreen> {
                         itemCount: snapshot.data!.docs.length,
                         itemBuilder: (context, index) {
                           return ListTile(
-                            onTap: (){
-                              // ref.doc(snapshot.data!.docs[index]['id'].toSting()).update({
-                              //     'title' : 'its me shivani'
-                              // }).then((value){
-                              //    Utils().toastMessage('updated');
-                              // }).onError((error, stackTrace){
-                              //   Utils().toastMessage(error.toString());
-                              // });
-                              ref.doc(snapshot.data!.docs[index]['id'].toString()).delete;
+                            //   onTap: () {
+                            //     ref.doc(snapshot.data!.docs[index]['id'].toString()).update({
+                            //       'title': 'its me shivani'
+                            //     }).then((value) {
+                            //       Utils().toastMessage('updated');
+                            //     }).onError((error, stackTrace) {
+                            //       Utils().toastMessage(error.toString());
+                            //     });
+                            //     ref.doc(snapshot.data!.docs[index]['id'].toString()).delete();
+                            //   },
+                            onTap: () {
+                              showMyDialog(
+                                  snapshot.data!.docs[index]['title']
+                                      .toString(),
+                                  snapshot.data!.docs[index]['id'].toString());
                             },
                             title: Text(
                                 snapshot.data!.docs[index]['title'].toString()),
                             subtitle: Text(
                                 snapshot.data!.docs[index]['id'].toString()),
                           );
-                        }));
+                        }
+                        )
+                        );
               }),
         ],
       ),
@@ -95,34 +103,63 @@ class _FireStoreScreenState extends State<FireStoreScreen> {
     );
   }
 
-  void showMyDialog(String title, String postId) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text('Edit Post'),
-          content: TextFormField(
-            controller: editController,
-            decoration: InputDecoration(
-              hintText: 'Edit post',
-            ),
+ void showMyDialog(String title, String postId) {
+  editController.text = title; // Populate the editController with the current title
+  showDialog(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        title: Text('Edit Post'),
+        content: TextFormField(
+          controller: editController,
+          decoration: InputDecoration(
+            hintText: 'Edit post',
           ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: Text('update'),
-            ),
-          ],
-        );
-      },
-    );
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              updateDocument(postId, editController.text);
+              editController.clear(); // Clear the editController
+              Navigator.pop(context);
+            },
+            child: Text('Update'),
+          ),
+        ],
+      );
+    },
+  );
+}
+void updateDocument(String documentId, String title) {
+  ref.doc(documentId).get().then((documentSnapshot) {
+    if (documentSnapshot.exists) {
+      ref.doc(documentId).update({'title': title}).then((value) {
+        Utils().toastMessage('Updated successfully');
+        setState(() {}); // Refresh the UI
+      }).onError((error, stackTrace) {
+        Utils().toastMessage('Error updating document: $error');
+      });
+    } else {
+      Utils().toastMessage('Document not found');
+    }
+  }).onError((error, stackTrace) {
+    Utils().toastMessage('Error getting document: $error');
+  });
+}
+
+  void deleteDocument(String documentId) {
+    ref.doc(documentId).delete().then((value) {
+      Utils().toastMessage('Deleted successfully');
+    }).onError((error, stackTrace) {
+      Utils().toastMessage('Error deleting document: $error');
+    });
   }
 }
+
+
