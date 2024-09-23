@@ -32,7 +32,7 @@ class _AddFirestoreDataScreenState extends State<AddFirestoreDataScreen> {
               maxLines: 4,
               controller: postController,
               decoration: InputDecoration(
-                  hintText: 'What is in your mind?',
+                  hintText: 'What is in your mind..?',
                   border: OutlineInputBorder()),
             ),
             SizedBox(
