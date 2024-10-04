@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_project/ui/upload_image.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_project/ui/auth/login_screen.dart';
 import 'package:firebase_project/ui/firestore/firestore_list_screen.dart';
+import 'package:firebase_project/ui/upload_image.dart';
 
 class SplashServices {
   void isLogin(BuildContext context) {
@@ -13,12 +15,12 @@ class SplashServices {
       Timer(
           const Duration(seconds: 3),
           () => Navigator.push(context,
-              MaterialPageRoute(builder: (context) => const FireStoreScreen())));
+              MaterialPageRoute(builder: (context) => UploadImageScreen())));
     } else {
       Timer(
           const Duration(seconds: 3),
           () => Navigator.push(
-              context, MaterialPageRoute(builder: (context) => const loginScreen())));
+              context, MaterialPageRoute(builder: (context) => loginScreen())));
     }
   }
 }
